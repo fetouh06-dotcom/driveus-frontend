@@ -65,28 +65,33 @@
   async function initAutocomplete() {
     if (!els.pickup || !els.dropoff) return;
 
+    // Try to ensure Places is loaded (new API)
     try {
       if (window.google?.maps?.importLibrary) {
         await google.maps.importLibrary("places");
       }
     } catch (e) {
-      console.error("❌ Could not load Places library:", e);
+      console.error("❌ Could not import Places:", e);
     }
 
-    const Autocomplete = window.google?.maps?.places?.Autocomplete;
-    if (!Autocomplete) {
-      console.warn("Google Places Autocomplete still unavailable.");
-      setNotice("Autocomplete indisponible. Vérifie l’activation de Places API sur Google Cloud.", "error");
-      return;
+    try {
+      const AutocompleteCtor = google?.maps?.places?.Autocomplete;
+      if (!AutocompleteCtor) {
+        setNotice("Autocomplete indisponible. Vérifie Places API (Google Cloud).", "error");
+        return;
+      }
+
+      const opts = {
+        fields: ["formatted_address", "geometry", "name"],
+        componentRestrictions: { country: ["fr"] },
+      };
+
+      new AutocompleteCtor(els.pickup, opts);
+      new AutocompleteCtor(els.dropoff, opts);
+    } catch (e) {
+      console.error("❌ Autocomplete init failed:", e);
+      setNotice("Autocomplete indisponible (clé Google / restrictions).", "error");
     }
-
-    const opts = {
-      fields: ["formatted_address", "geometry", "name"],
-      componentRestrictions: { country: ["fr"] },
-    };
-
-    new Autocomplete(els.pickup, opts);
-    new Autocomplete(els.dropoff, opts);
   }
 
   function getEstimatePayload() {
