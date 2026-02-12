@@ -13,7 +13,6 @@
 
     // Already loaded?
     if (window.google?.maps) {
-      // Ensure places is available
       if (google.maps.importLibrary) {
         await google.maps.importLibrary("places");
       }
@@ -35,7 +34,6 @@
 
     s.onload = async () => {
       try {
-        // Modern way: explicitly import Places library
         if (google?.maps?.importLibrary) {
           await google.maps.importLibrary("places");
         }
