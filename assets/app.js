@@ -62,11 +62,21 @@
     window.addEventListener("google-maps-loaded", fn, { once: true });
   }
 
-  function initAutocomplete() {
+  async function initAutocomplete() {
     if (!els.pickup || !els.dropoff) return;
 
-    if (!window.google?.maps?.places?.Autocomplete) {
-      console.warn("Google Places Autocomplete not available. Ensure Maps JS loads with libraries=places.");
+    try {
+      if (window.google?.maps?.importLibrary) {
+        await google.maps.importLibrary("places");
+      }
+    } catch (e) {
+      console.error("❌ Could not load Places library:", e);
+    }
+
+    const Autocomplete = window.google?.maps?.places?.Autocomplete;
+    if (!Autocomplete) {
+      console.warn("Google Places Autocomplete still unavailable.");
+      setNotice("Autocomplete indisponible. Vérifie l’activation de Places API sur Google Cloud.", "error");
       return;
     }
 
@@ -75,8 +85,8 @@
       componentRestrictions: { country: ["fr"] },
     };
 
-    new google.maps.places.Autocomplete(els.pickup, opts);
-    new google.maps.places.Autocomplete(els.dropoff, opts);
+    new Autocomplete(els.pickup, opts);
+    new Autocomplete(els.dropoff, opts);
   }
 
   function getEstimatePayload() {
