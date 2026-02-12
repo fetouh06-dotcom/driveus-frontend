@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paiement annulé — DriveUs</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+  <script src="/assets/config.js"></script>
+  <script>
+    (function(){
+      const id = window.DRIVEUS_CONFIG?.GA_MEASUREMENT_ID;
+      if (!id) return;
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', id, { send_page_view: true });
+    })();
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="/">
+        <span class="brand__mark">🚘</span>
+        <span class="brand__text"><strong>DriveUs</strong><span>Chauffeur VTC</span></span>
+      </a>
+      <a class="cta cta--small" href="/">Accueil</a>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="card" style="padding:18px">
+        <h2>Paiement annulé</h2>
+        <p class="muted">Aucun paiement n’a été effectué. Tu peux réessayer quand tu veux.</p>
+
+        <div class="summary">
+          <div class="summary__row"><span>Booking ID</span><strong id="bid">—</strong></div>
+        </div>
+
+        <div class="actions">
+          <a class="btn" href="/">Revenir à la réservation</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const p = new URLSearchParams(location.search);
+    const bookingId = p.get("booking_id") || (function(){ try { return localStorage.getItem("driveus_last_booking_id"); } catch(e){ return ""; } })() || "";
+    document.getElementById("bid").textContent = bookingId || "—";
+
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "driveus_payment_cancel", { booking_id: bookingId });
+    }
+  </script>
+</body>
+</html>

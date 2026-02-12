@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DriveUs — Chauffeur privé premium</title>
+  <meta name="description" content="Chauffeur privé premium. Réservation en ligne, estimation automatique, paiement sécurisé Stripe." />
+
+  <meta name="theme-color" content="#0b0b0b" />
+  <meta name="apple-mobile-web-app-title" content="DriveUs" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/assets/style.css?v=2" />
+
+  <!-- Config -->
+  <!-- GA4 (optionnel) -->
+  <script>
+    (function () {
+      const cfg = window.DRIVEUS_CONFIG || {};
+      if (!cfg.GA_MEASUREMENT_ID) return;
+      if (window.__DRIVEUS_GA_LOADED__) return;
+      window.__DRIVEUS_GA_LOADED__ = true;
+
+      const s = document.createElement("script");
+      s.async = true;
+      s.src =
+        "https://www.googletagmanager.com/gtag/js?id=" +
+        encodeURIComponent(cfg.GA_MEASUREMENT_ID);
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = window.gtag || gtag;
+
+      window.gtag("js", new Date());
+      window.gtag("config", cfg.GA_MEASUREMENT_ID, { send_page_view: true });
+    })();
+  </script>
+</head>
+
+<body>
+  <noscript>
+    <div style="padding:12px;background:#111;color:#fff;text-align:center;">
+      Active JavaScript pour utiliser la réservation en ligne.
+    </div>
+  </noscript>
+
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="/">
+        <span class="brand__mark">◆</span>
+        <span class="brand__text">
+          <strong>DriveUs</strong>
+          <span>Chauffeur privé</span>
+        </span>
+      </a>
+      <a class="cta" href="#booking">Réserver</a>
+    </div>
+  </header>
+
+  <section class="hero hero--fullscreen">
+    <div class="hero__media" aria-hidden="true"></div>
+    <div class="hero__overlay" aria-hidden="true"></div>
+
+    <div class="container hero__grid">
+
+      <div class="hero__copy">
+        <div class="kicker">PARIS • ÎLE-DE-FRANCE • AÉROPORTS</div>
+        <h1>Au-delà du trajet,<br><span class="accent">l’expérience</span>.</h1>
+        <p class="lead">
+          Confort, discrétion, ponctualité. Estimation instantanée,
+          paiement sécurisé et confirmation immédiate.
+        </p>
+        <a class="btnPrimary" href="#booking">Réserver maintenant</a>
+      </div>
+
+      <div class="card card--glass" id="booking">
+        <div class="card__head">
+          <h2>Réservation</h2>
+          <p class="muted">Estimation automatique & paiement d’acompte sécurisé.</p>
+        </div>
+
+        <form id="bookingForm" class="form" autocomplete="on">
+
+          <div class="grid2">
+            <div class="field">
+              <label for="customer_name">Nom</label>
+              <input id="customer_name" name="customer_name" autocomplete="name" required />
+            </div>
+
+            <div class="field">
+              <label for="customer_email">Email</label>
+              <input id="customer_email" name="customer_email" type="email" autocomplete="email" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="phone">Téléphone</label>
+            <input id="phone" name="phone" autocomplete="tel" />
+          </div>
+
+          <div class="field">
+            <label for="pickup_address">Départ</label>
+            <!-- Optionnel: évite conflits autofill -->
+            <input id="pickup_address" name="pickup_address" autocomplete="off" required />
+          </div>
+
+          <div class="field">
+            <label for="dropoff_address">Arrivée</label>
+            <!-- Optionnel: évite conflits autofill -->
+            <input id="dropoff_address" name="dropoff_address" autocomplete="off" required />
+          </div>
+
+          <div class="grid2">
+            <div class="field">
+              <label for="pickup_datetime">Date & heure</label>
+              <input id="pickup_datetime" name="pickup_datetime" type="datetime-local" required />
+            </div>
+
+            <div class="field">
+              <label for="passengers">Passagers</label>
+              <select id="passengers" name="passengers">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="notes">Infos au chauffeur (optionnel)</label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Bagages, terminal, contraintes, etc."></textarea>
+          </div>
+
+          <div class="summary" aria-live="polite">
+            <div class="summary__row">
+              <span>Estimation</span>
+              <strong id="fareLabel">—</strong>
+            </div>
+            <div class="summary__row">
+              <span>Acompte</span>
+              <strong id="depositLabel">—</strong>
+            </div>
+            <div class="summary__row summary__row--total">
+              <span>À payer maintenant</span>
+              <strong id="payNowLabel">—</strong>
+            </div>
+            <div class="muted small" id="estimateHint">
+              Renseigne départ et arrivée pour calculer l’estimation.
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn btn--ghost" id="btnEstimate">Recalculer</button>
+            <button type="submit" class="btn btn--primary" id="btnPay">Payer l’acompte</button>
+          </div>
+
+          <div class="notice" id="notice" aria-live="polite"></div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>© <span id="year"></span> DriveUs</span>
+      <a href="mailto:contact@driveus.fr">contact@driveus.fr</a>
+    </div>
+  </footer>
+
+  <!-- App -->
+  <script src="/assets/app.js?v=20260208-7"></script>
+</body>
+</html>
